@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booble Gaming - Hub Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #111;
+            color: #fff;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #000;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: #FFD700;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #FFD700;
+        }
+
+        .hero {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: url('/api/placeholder/1200/800') center/cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #fff;
+            text-shadow: 0 0 10px #FFD700;
+        }
+
+        .hero h1 span {
+            color: #FFD700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+
+        .search-container {
+            display: flex;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-box {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #333;
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+            color: #fff;
+            outline: none;
+        }
+
+        .search-btn {
+            background-color: #FFD700;
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            background-color: #fff;
+        }
+
+        .services {
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            color: #FFD700;
+            letter-spacing: 2px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 1px solid #333;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .service-img {
+            height: 160px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .service-content {
+            padding: 20px;
+        }
+
+        .service-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: #FFD700;
+            text-transform: uppercase;
+        }
+
+        .service-content p {
+            color: #ccc;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .service-link {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .service-link:hover {
+            transform: translateX(5px);
+        }
+
+        .cta {
+            background-color: #000;
+            color: #fff;
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 2px solid #FFD700;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #FFD700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #ddd;
+        }
+
+        .cta-btn {
+            background-color: #FFD700;
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .cta-btn:hover {
+            background-color: #fff;
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color: #000;
+            color: #ccc;
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .social-link {
+            display: inline-block;
+            margin: 0 10px;
+            width: 40px;
+            height: 40px;
+            background-color: #222;
+            border-radius: 50%;
+            color: #FFD700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+
+        .social-link:hover {
+            background-color: #FFD700;
+            color: #000;
+        }
+
+        .copyright {
+            margin-top: 20px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            nav ul {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            B<span>oo</span>ble
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#games">Games</a></li>
+                <li><a href="#apps">Apps</a></li>
+                <li><a href="#stream">Stream</a></li>
+                <li><a href="#login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Bem-vindo à <span>Booble</span></h1>
+            <p>Sua central de jogos, apps e entretenimento digital. Tudo que você precisa em um só lugar!</p>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Buscar jogos, apps e mais...">
+                <button class="search-btn">Buscar</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" id="games">
+        <h2 class="section-title">Nossos Serviços</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-img">B-Games</div>
+                <div class="service-content">
+                    <h3>Booble Games</h3>
+                    <p>Jogos online, competições e desafios. Conecte-se com jogadores do mundo todo.</p>
+                    <a href="#" class="service-link">Jogar agora →</a>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-img">B-Stream</div>
+                <div class="service-content">
+                    <h3>Booble Stream</h3>
+                    <p>Transmita suas gameplays, assista streamers e compartilhe momentos épicos.</p>
+                    <a href="#" class="service-link">Assistir agora →</a>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-img">B-Store</div>
+                <div class="service-content">
+                    <h3>Booble Store</h3>
+                    <p>Loja de jogos, apps e conteúdos digitais com os melhores preços do mercado.</p>
+                    <a href="#" class="service-link">Comprar agora →</a>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-img">B-Chat</div>
+                <div class="service-content">
+                    <h3>Booble Chat</h3>
+                    <p>Chat por voz e texto para gamers. Crie salas e converse com sua equipe.</p>
+                    <a href="#" class="service-link">Conectar agora →</a>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-img">B-Cloud</div>
+                <div class="service-content">
+                    <h3>Booble Cloud</h3>
+                    <p>Armazenamento na nuvem para salvar seus games, replays e capturas de tela.</p>
+                    <a href="#" class="service-link">Acessar agora →</a>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-img">B-Music</div>
+                <div class="service-content">
+                    <h3>Booble Music</h3>
+                    <p>Ouça trilhas sonoras de games e playlists feitas para melhorar sua gameplay.</p>
+                    <a href="#" class="service-link">Ouvir agora →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Entre para o Booble Gaming</h2>
+        <p>Crie sua conta gratuita e tenha acesso a todos os nossos serviços. Jogos, streams, música e muito mais em um só lugar!</p>
+        <button class="cta-btn">Criar conta agora</button>
+    </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="#" class="social-link">F</a>
+            <a href="#" class="social-link">T</a>
+            <a href="#" class="social-link">I</a>
+            <a href="#" class="social-link">D</a>
+        </div>
+        <div class="copyright">
+            &copy; 2025 Booble Gaming. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        // Efeito de hover nos cards
+        const cards = document.querySelectorAll('.service-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = '#FFD700';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#333';
+            });
+        });
+
+        // Interação com botão de busca
+        document.querySelector('.search-btn').addEventListener('click', () => {
+            alert('Buscando no universo Booble Gaming...');
+        });
+
+        // Interação com botão CTA
+        document.querySelector('.cta-btn').addEventListener('click', () => {
+            alert('Criando sua conta no Booble Gaming...');
+        });
+    </script>
+</body>
+  </html>
