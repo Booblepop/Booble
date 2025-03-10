@@ -1,1 +1,404 @@
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi IMG - Duplicador de Imagens</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f8fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        header h1 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .upload-area {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .upload-area h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .upload-box {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 40px 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-box:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .upload-box i {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .upload-box p {
+            color: #666;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .preview-area {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .controls {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-large {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .btn-disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .btn-disabled:hover {
+            background-color: #bdc3c7;
+        }
+        
+        .status-area {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-message {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .booble-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .booble-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .upload-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Multi IMG</h1>
+            <p>Faça upload de uma imagem, escolha quantas cópias deseja e baixe tudo em um arquivo .zip</p>
+        </header>
+        
+        <main>
+            <div class="upload-area">
+                <h2>1. Escolha uma imagem</h2>
+                <div class="upload-box" id="uploadBox">
+                    <i>📁</i>
+                    <p>Clique ou arraste uma imagem aqui</p>
+                    <input type="file" id="fileInput" accept="image/*">
+                </div>
+                
+                <div class="preview-area" id="previewArea">
+                    <img src="/api/placeholder/200/200" alt="Preview" class="preview-image" id="previewImage">
+                    <p id="fileName">nome-do-arquivo.jpg</p>
+                    
+                    <div class="controls">
+                        <div class="form-group">
+                            <label for="copyCount">2. Quantas cópias deseja fazer?</label>
+                            <input type="number" id="copyCount" min="1" max="100" value="5">
+                        </div>
+                        
+                        <button class="btn btn-large" id="processButton">3. Gerar e baixar cópias</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-area" id="statusArea">
+                <div class="loader" id="loader"></div>
+                <p class="status-message" id="statusMessage">Processando as imagens...</p>
+                <button class="btn" id="downloadButton" style="display: none;">Baixar arquivo ZIP</button>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Multi IMG &copy; 2025 - Parte das ferramentas <a href="#" class="booble-link">B Tools</a> do site <a href="#" class="booble-link">Booble</a></p>
+        </footer>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <script>
+        // Elementos do DOM
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        const previewArea = document.getElementById('previewArea');
+        const previewImage = document.getElementById('previewImage');
+        const fileName = document.getElementById('fileName');
+        const copyCount = document.getElementById('copyCount');
+        const processButton = document.getElementById('processButton');
+        const statusArea = document.getElementById('statusArea');
+        const loader = document.getElementById('loader');
+        const statusMessage = document.getElementById('statusMessage');
+        const downloadButton = document.getElementById('downloadButton');
+        
+        // Variáveis globais
+        let selectedFile = null;
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            // Configurar o evento de clique na área de upload
+            uploadBox.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            // Configurar o evento de drag and drop
+            uploadBox.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadBox.style.borderColor = '#2ecc71';
+                uploadBox.style.backgroundColor = '#e8f8f5';
+            });
+            
+            uploadBox.addEventListener('dragleave', () => {
+                uploadBox.style.borderColor = '#3498db';
+                uploadBox.style.backgroundColor = '';
+            });
+            
+            uploadBox.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadBox.style.borderColor = '#3498db';
+                uploadBox.style.backgroundColor = '';
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0 && files[0].type.match('image.*')) {
+                    handleFileSelect(files[0]);
+                }
+            });
+            
+            // Configurar o evento de alteração do input de arquivo
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            
+            // Configurar o evento de clique no botão de processamento
+            processButton.addEventListener('click', () => {
+                processDuplication();
+            });
+        });
+        
+        // Função para lidar com a seleção de arquivos
+        function handleFileSelect(file) {
+            selectedFile = file;
+            
+            // Exibir o preview da imagem
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            
+            // Atualizar o nome do arquivo
+            fileName.textContent = file.name;
+            
+            // Mostrar a área de preview
+            previewArea.style.display = 'block';
+        }
+        
+        // Função para processar a duplicação
+        function processDuplication() {
+            if (!selectedFile) {
+                alert('Por favor, selecione uma imagem primeiro.');
+                return;
+            }
+            
+            const count = parseInt(copyCount.value);
+            if (isNaN(count) || count < 1 || count > 100) {
+                alert('Por favor, insira um número válido entre 1 e 100.');
+                return;
+            }
+            
+            // Mostrar a área de status
+            statusArea.style.display = 'block';
+            loader.style.display = 'block';
+            statusMessage.textContent = 'Processando as imagens...';
+            downloadButton.style.display = 'none';
+            
+            // Criar o arquivo ZIP
+            setTimeout(() => {
+                createZipFile(count);
+            }, 500);
+        }
+        
+        // Função para criar o arquivo ZIP
+        function createZipFile(count) {
+            const zip = new JSZip();
+            
+            // Extrair o nome e a extensão do arquivo
+            const originalName = selectedFile.name;
+            const dotIndex = originalName.lastIndexOf('.');
+            const baseName = dotIndex !== -1 ? originalName.substring(0, dotIndex) : originalName;
+            const extension = dotIndex !== -1 ? originalName.substring(dotIndex) : '';
+            
+            // Ler a imagem uma vez
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                
+                // Adicionar as cópias ao arquivo ZIP
+                for (let i = 1; i <= count; i++) {
+                    const newFileName = `${baseName}_copy${i}${extension}`;
+                    
+                    // Usar o ArrayBuffer para binário
+                    zip.file(newFileName, imageData.split(',')[1], {base64: true});
+                }
+                
+                // Gerar o arquivo ZIP
+                zip.generateAsync({type: 'blob'}).then(function(content) {
+                    // Atualizar o status
+                    loader.style.display = 'none';
+                    statusMessage.textContent = `${count} cópias criadas com sucesso!`;
+                    
+                    // Preparar o botão de download
+                    const zipFileName = `${baseName}_copies.zip`;
+                    downloadButton.style.display = 'inline-block';
+                    downloadButton.onclick = function() {
+                        saveAs(content, zipFileName);
+                    };
+                    
+                    // Iniciar o download automaticamente
+                    saveAs(content, zipFileName);
+                }).catch(function(error) {
+                    console.error("Erro ao gerar ZIP:", error);
+                    statusMessage.textContent = "Erro ao criar o arquivo ZIP. Tente novamente.";
+                    loader.style.display = 'none';
+                });
+            };
+            
+            reader.readAsDataURL(selectedFile);
+        }
+    </script>
+</body>
+  </html>
